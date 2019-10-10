@@ -85,7 +85,6 @@ data "aws_iam_policy_document" "codebuild_ecr" {
     actions = [
       "ecr:BatchCheckLayerAvailability",
       "ecr:CompleteLayerUpload",
-      "ecr:GetAuthorizationToken",
       "ecr:InitiateLayerUpload",
       "ecr:PutImage",
       "ecr:UploadLayerPart",
@@ -99,6 +98,12 @@ data "aws_iam_policy_document" "codebuild_ecr" {
 
     resources = ["arn:aws:ecr:${local.aws_region}:${local.account_id}:repository/${var.ecr_name}"]
   }
+
+  statement {
+    actions   = ["ecr:GetAuthorizationToken"]
+    resources = ["*"]
+  }
+
 }
 
 resource "aws_iam_role_policy" "codebuild_ecr" {
