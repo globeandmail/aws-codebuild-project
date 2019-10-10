@@ -4,12 +4,12 @@ data "aws_caller_identity" "current" {}
 locals {
   aws_region      = data.aws_region.current.name
   account_id      = data.aws_caller_identity.current.account_id
-  datetime        = formatdate("YYYYMMDDhhmmss", timestamp())
   privileged_mode = var.deploy_type == "ecr" || var.deploy_type == "ecs" ? true : false
 }
 
 resource "aws_s3_bucket" "artifact" {
-  bucket = substr("codepipeline-${local.aws_region}:${local.account_id}-${var.name}-${local.datetime}", 0, 63)
+  # S3 bucket cannot be longer than 63 characters
+  bucket = substr("codepipeline-${local.aws_region}:${local.account_id}-${var.name}", 0, 63)
   acl    = "private"
 
   lifecycle_rule {
@@ -41,7 +41,7 @@ data "aws_iam_policy_document" "codebuild_assume" {
 }
 
 resource "aws_iam_role" "codebuild" {
-  name               = "codebuild-${var.name}-${local.datetime}"
+  name               = "codebuild-${var.name}"
   assume_role_policy = data.aws_iam_policy_document.codebuild_assume.json
 
   tags = var.tags
