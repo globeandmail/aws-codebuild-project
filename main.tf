@@ -9,7 +9,7 @@ locals {
 }
 
 resource "aws_s3_bucket" "artifact" {
-  bucket = "codepipeline-${local.aws_region}-${local.account_id}-${var.name}-${local.datetime}"
+  bucket = substr("codepipeline-${local.aws_region}:${local.account_id}-${var.name}-${local.datetime}", 0, 63)
   acl    = "private"
 
   lifecycle_rule {
@@ -55,8 +55,8 @@ data "aws_iam_policy_document" "codebuild_baseline" {
       "logs:CreateLogGroup",
     ]
     resources = [
-      "arn:aws:logs:${local.aws_region}-${local.account_id}:log-group:/aws/codebuild/${var.name}",
-      "arn:aws:logs:${local.aws_region}-${local.account_id}:log-group:/aws/codebuild/${var.name}:*"
+      "arn:aws:logs:${local.aws_region}:${local.account_id}:log-group:/aws/codebuild/${var.name}",
+      "arn:aws:logs:${local.aws_region}:${local.account_id}:log-group:/aws/codebuild/${var.name}:*"
     ]
   }
 
@@ -97,7 +97,7 @@ data "aws_iam_policy_document" "codebuild_ecr" {
       "ecr:BatchGetImage"
     ]
 
-    resources = ["arn:aws:ecr:${local.aws_region}-${local.account_id}:repository/${var.ecr_name}"]
+    resources = ["arn:aws:ecr:${local.aws_region}:${local.account_id}:repository/${var.ecr_name}"]
   }
 }
 
