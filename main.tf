@@ -129,10 +129,19 @@ resource "aws_codebuild_project" "project" {
     image           = var.codebuild_image
     type            = "LINUX_CONTAINER"
     privileged_mode = local.privileged_mode
+
+    dynamic "environment_variable" {
+      for_each = var.ecr_name == null ? [] : [var.env_repo_name]
+      content {
+        name  = "IMAGE_REPO_NAME"
+        value = var.ecr_name
+      }
+    }
   }
 
   source {
-    type = "CODEPIPELINE"
+    type      = "CODEPIPELINE"
+    buildspec = var.buildspec
   }
 
   tags = var.tags

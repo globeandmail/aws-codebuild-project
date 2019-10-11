@@ -26,10 +26,23 @@ variable "build_compute_type" {
   default     = "BUILD_GENERAL1_SMALL"
 }
 
+variable "buildspec" {
+  type        = string
+  description = "build spec file other than buildspec.yml"
+  default     = "buildspec.yml"
+}
+
 variable "logs_retention_in_days" {
   type        = number
   description = "(Optional) Days to keep the cloudwatch logs for this codebuild project"
   default     = 14
+}
+
+variable "env_repo_name" {
+  type = object({
+    variables = map(string)
+  })
+  default = null
 }
 
 variable "tags" {
