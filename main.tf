@@ -4,7 +4,7 @@ data "aws_caller_identity" "current" {}
 locals {
   aws_region      = data.aws_region.current.name
   account_id      = data.aws_caller_identity.current.account_id
-  privileged_mode = var.deploy_type == "ecr" || var.deploy_type == "ecs" ? true : false
+  privileged_mode = var.deploy_type == "ecr" || var.deploy_type == "ecs" || var.privileged_mode == true ? true : false
 }
 
 resource "aws_s3_bucket" "artifact" {

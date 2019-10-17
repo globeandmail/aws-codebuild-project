@@ -45,6 +45,11 @@ variable "env_repo_name" {
   default = null
 }
 
+variable "privileged_mode" {
+  description = "set privileged_mode flag for docker container use"
+  default     = false
+
+}
 variable "tags" {
   type        = map
   description = "(Optional) A mapping of tags to assign to the resource"
