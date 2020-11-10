@@ -104,6 +104,15 @@ data "aws_iam_policy_document" "codebuild_ecr" {
     resources = ["*"]
   }
 
+  statement {
+    actions = [
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchGetImage"
+    ]
+
+    resources = ["arn:aws:ecr:${local.aws_region}:${local.account_id}:repository/*"]
+  }
+
 }
 
 resource "aws_iam_role_policy" "codebuild_ecr" {
