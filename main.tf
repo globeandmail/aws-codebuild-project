@@ -113,6 +113,11 @@ data "aws_iam_policy_document" "codebuild_ecr" {
     resources = ["arn:aws:ecr:${local.aws_region}:${local.account_id}:repository/*"]
   }
 
+  statement {
+    actions   = ["ssm:GetParameters"]
+    resources = ["arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/dockerhub/*"]
+  }
+
 }
 
 resource "aws_iam_role_policy" "codebuild_ecr" {
@@ -146,7 +151,26 @@ resource "aws_codebuild_project" "project" {
         value = var.ecr_name
       }
     }
+
+    dynamic "environment_variable" {
+      for_each = var.use_docker_credentials == true ? [1] : []
+      content {
+        name  = "DOCKERHUB_USER"
+        value = "/dockerhub/user"
+        type  = "PARAMETER_STORE"
+      }
+    }
+
+    dynamic "environment_variable" {
+      for_each = var.use_docker_credentials == true ? [1] : []
+      content {
+        name  = "DOCKERHUB_PASS"
+        value = "/dockerhub/pass"
+        type  = "PARAMETER_STORE"
+      }
+    }
   }
+
 
   source {
     type      = "CODEPIPELINE"
