@@ -38,6 +38,11 @@ variable "logs_retention_in_days" {
   default     = 14
 }
 
+variable "use_docker_credentials" {
+  type        = bool
+  description = "(Optional) Use dockerhub credentals stored in parameter store"
+  default     = false
+}
 variable "env_repo_name" {
   type = object({
     variables = map(string)
