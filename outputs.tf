@@ -13,3 +13,7 @@ output "artifact_bucket_id" {
 output "artifact_bucket_arn" {
   value = aws_s3_bucket.artifact.arn
 }
+
+output "code_build_iam_role_arn" {
+  value = aws_iam_role.codebuild.arn
+}
